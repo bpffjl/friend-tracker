@@ -275,7 +275,10 @@
         <option value="recent">Most recently contacted</option>
       </select>
     </div>
-    <button class="btn-ghost" style="font-size:0.82rem;padding:6px 12px" onclick="openImport()">Import CSV</button>
+    <div style="display:flex;gap:6px">
+      <button class="btn-ghost" style="font-size:0.82rem;padding:6px 12px" onclick="openImport()">Import CSV</button>
+      <button class="btn-ghost" style="font-size:0.82rem;padding:6px 12px" id="dedupBtn" onclick="deduplicateFriends()" style="display:none">Remove duplicates</button>
+    </div>
   </div>
   <div id="loadingState" class="visible">Loading…</div>
   <div class="friends-list" id="friendsList"></div>
@@ -542,6 +545,11 @@
     const order  = document.getElementById('sortSelect').value;
     const sorted = sortedFriends(order);
     renderStats();
+
+    // Show dedup button if duplicates exist
+    const names = friends.map(f => f.name.trim().toLowerCase());
+    const hasDupes = names.length !== new Set(names).size;
+    document.getElementById('dedupBtn').style.display = hasDupes ? '' : 'none';
     if (sorted.length === 0) {
       list.innerHTML = `<div class="empty-state"><h2>No friends added yet</h2><p>Type a name above and click Add to get started.</p></div>`;
       return;
@@ -649,6 +657,38 @@
     if (!val || val < 1) { toast('Enter a number of days (e.g. 14)'); return; }
     friend.reminderDays = val; saveToCloud();
     toast(`Reminder set: every ${val} days`); renderFriends();
+  }
+
+  function deduplicateFriends() {
+    const groups = {};
+    for (const f of friends) {
+      const key = f.name.trim().toLowerCase();
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(f);
+    }
+    const dupes = Object.values(groups).filter(g => g.length > 1).length;
+    if (dupes === 0) { toast('No duplicates found'); return; }
+    if (!confirm(`Found ${dupes} duplicate name${dupes !== 1 ? 's' : ''}. Merge them now?`)) return;
+
+    const merged = Object.values(groups).map(group => {
+      if (group.length === 1) return group[0];
+      // Keep first entry, merge all contacts, deduplicate contacts by date+note
+      const base = { ...group[0] };
+      const allContacts = group.flatMap(f => f.contacts);
+      const seen = new Set();
+      base.contacts = allContacts.filter(c => {
+        const key = c.date + '|' + c.note;
+        if (seen.has(key)) return false;
+        seen.add(key); return true;
+      });
+      base.reminderDays = group.find(f => f.reminderDays)?.reminderDays || null;
+      return base;
+    });
+
+    friends = merged;
+    saveToCloud(true);
+    toast(`Merged duplicates — ${friends.length} friends remaining`);
+    renderFriends();
   }
 
   function clearReminderInterval(id) {
