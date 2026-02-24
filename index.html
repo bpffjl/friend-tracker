@@ -374,16 +374,20 @@
       friends = await loadFromCloud(user.uid);
       document.getElementById('loadingState').classList.remove('visible');
 
-      // One-time migration from localStorage
+      // One-time migration from localStorage — merge by ID to avoid duplicates
       const legacy = localStorage.getItem('friend-tracker-v1');
-      if (legacy && friends.length === 0) {
+      if (legacy) {
         try {
           const parsed = JSON.parse(legacy);
-          if (parsed.length > 0 && confirm(`Found ${parsed.length} friends saved locally. Move them to your account?`)) {
-            friends = parsed;
+          const existingIds = new Set(friends.map(f => f.id));
+          const newOnes = parsed.filter(f => !existingIds.has(f.id));
+          if (newOnes.length > 0 && confirm(`Found ${newOnes.length} friend${newOnes.length !== 1 ? 's' : ''} saved on this device not yet in your account. Add them?`)) {
+            friends = [...friends, ...newOnes];
             await db.collection('users').doc(user.uid).set({ friends });
             localStorage.removeItem('friend-tracker-v1');
-            toast(`Migrated ${friends.length} friends to your account`);
+            toast(`Added ${newOnes.length} friends from this device`);
+          } else {
+            localStorage.removeItem('friend-tracker-v1');
           }
         } catch (e) { /* ignore malformed data */ }
       }
