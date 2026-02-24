@@ -61,103 +61,64 @@
     .auth-card p  { color: var(--muted); font-size: 0.9rem; line-height: 1.5; }
 
     .btn-google {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      background: #fff;
-      color: #1f1f1f;
-      border: none;
-      border-radius: var(--radius-sm);
-      padding: 11px 20px;
-      font-size: 0.95rem;
-      font-weight: 500;
-      cursor: pointer;
-      font-family: inherit;
-      transition: background 0.15s;
-      margin-top: 8px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: #fff; color: #1f1f1f; border: none; border-radius: var(--radius-sm);
+      padding: 11px 20px; font-size: 0.95rem; font-weight: 500; cursor: pointer;
+      font-family: inherit; transition: background 0.15s; margin-top: 8px;
     }
     .btn-google:hover { background: #f0f0f0; }
-    .btn-google svg { flex-shrink: 0; }
+    .btn-google:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .auth-error {
+      display: none;
+      background: rgba(239,68,68,0.12);
+      border: 1px solid var(--red);
+      color: #fca5a5;
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 0.82rem;
+      text-align: left;
+      line-height: 1.4;
+    }
+    .auth-error.visible { display: block; }
 
     /* ── Loading state ────────────────────────────────────────────────────── */
-    #loadingState {
-      display: none;
-      text-align: center;
-      padding: 60px 24px;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
+    #loadingState { display: none; text-align: center; padding: 60px 24px; color: var(--muted); font-size: 0.9rem; }
     #loadingState.visible { display: block; }
 
     /* ── Header ───────────────────────────────────────────────────────────── */
     header {
-      max-width: 680px;
-      margin: 0 auto 32px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
+      max-width: 680px; margin: 0 auto 32px;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
     }
-
     header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; }
     header p   { color: var(--muted); margin-top: 4px; font-size: 0.9rem; }
 
-    .user-nav {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-shrink: 0;
-      padding-top: 4px;
-    }
-
+    .user-nav { display: flex; align-items: center; gap: 10px; flex-shrink: 0; padding-top: 4px; }
     .user-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-      font-weight: 600;
+      width: 32px; height: 32px; border-radius: 50%; background: var(--surface2);
+      border: 1px solid var(--border); overflow: hidden; display: flex;
+      align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600;
     }
     .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
-
     .btn-signout {
-      background: transparent;
-      color: var(--muted);
-      font-size: 0.8rem;
-      padding: 4px 8px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      font-family: inherit;
-      transition: color 0.15s, border-color 0.15s;
+      background: transparent; color: var(--muted); font-size: 0.8rem; padding: 4px 8px;
+      border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer;
+      font-family: inherit; transition: color 0.15s, border-color 0.15s;
     }
     .btn-signout:hover { color: var(--text); border-color: var(--muted); }
 
     /* ── Main layout ──────────────────────────────────────────────────────── */
     .main { max-width: 680px; margin: 0 auto; }
-
     .add-form { display: flex; gap: 8px; margin-bottom: 24px; }
 
     input[type="text"], input[type="date"], textarea {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: var(--radius-sm);
-      padding: 10px 14px;
-      font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.15s;
-      font-family: inherit;
+      background: var(--surface); border: 1px solid var(--border); color: var(--text);
+      border-radius: var(--radius-sm); padding: 10px 14px; font-size: 0.95rem;
+      outline: none; transition: border-color 0.15s; font-family: inherit;
     }
     input[type="text"]:focus, input[type="date"]:focus, textarea:focus { border-color: var(--accent); }
     input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor: pointer; }
-
     .add-form input { flex: 1; }
 
     button {
@@ -165,23 +126,16 @@
       font-size: 0.9rem; font-family: inherit; font-weight: 500;
       padding: 10px 16px; transition: background 0.15s, opacity 0.15s;
     }
-
     .btn-primary { background: var(--accent); color: #fff; white-space: nowrap; }
     .btn-primary:hover { background: var(--accent-hover); }
-
     .btn-ghost { background: var(--surface2); color: var(--text); }
     .btn-ghost:hover { background: var(--border); }
-
     .btn-danger { background: transparent; color: var(--muted); padding: 6px 10px; font-size: 0.8rem; }
     .btn-danger:hover { color: var(--red); }
 
     /* ── Stats ────────────────────────────────────────────────────────────── */
     .stats { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
-
-    .stat {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 10px 16px; flex: 1; min-width: 100px;
-    }
+    .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 16px; flex: 1; min-width: 100px; }
     .stat-value { font-size: 1.4rem; font-weight: 700; }
     .stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
 
@@ -196,27 +150,14 @@
 
     /* ── Friend cards ─────────────────────────────────────────────────────── */
     .friends-list { display: flex; flex-direction: column; gap: 10px; }
-
-    .friend-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); overflow: hidden; transition: border-color 0.15s;
-    }
+    .friend-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
     .friend-card.overdue-high { border-left: 3px solid var(--red); }
     .friend-card.overdue-mid  { border-left: 3px solid var(--yellow); }
     .friend-card.overdue-low  { border-left: 3px solid var(--green); }
     .friend-card.never        { border-left: 3px solid var(--muted); }
 
-    .card-main {
-      display: flex; align-items: center; gap: 12px; padding: 14px 16px;
-      cursor: pointer; user-select: none;
-    }
-
-    .avatar {
-      width: 40px; height: 40px; border-radius: 50%; background: var(--surface2);
-      border: 1px solid var(--border); display: flex; align-items: center;
-      justify-content: center; font-weight: 700; font-size: 1rem; flex-shrink: 0;
-    }
-
+    .card-main { display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer; user-select: none; }
+    .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; flex-shrink: 0; }
     .friend-info { flex: 1; min-width: 0; }
     .friend-name { font-weight: 600; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .last-contact { font-size: 0.8rem; margin-top: 2px; }
@@ -224,41 +165,24 @@
     .last-contact.yellow { color: var(--yellow); }
     .last-contact.red    { color: var(--red); }
     .last-contact.muted  { color: var(--muted); }
-
     .card-actions { display: flex; align-items: center; gap: 6px; }
-
     .btn-log { background: var(--accent); color: #fff; padding: 7px 12px; font-size: 0.82rem; border-radius: var(--radius-sm); white-space: nowrap; }
     .btn-log:hover { background: var(--accent-hover); }
-
     .btn-expand { background: transparent; color: var(--muted); font-size: 1rem; padding: 6px 8px; line-height: 1; }
     .btn-expand:hover { color: var(--text); }
 
-    /* ── Card detail ──────────────────────────────────────────────────────── */
     .card-detail { border-top: 1px solid var(--border); padding: 14px 16px; display: none; }
     .card-detail.open { display: block; }
 
-    /* Interval row */
-    .interval-row {
-      display: flex; align-items: center; gap: 8px;
-      margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border); flex-wrap: wrap;
-    }
+    .interval-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
     .interval-row label { font-size: 0.82rem; color: var(--muted); white-space: nowrap; }
-    input[type="number"].interval-input {
-      width: 64px; padding: 7px 10px; font-size: 0.88rem; text-align: center;
-      background: var(--surface); border: 1px solid var(--border); color: var(--text);
-      border-radius: var(--radius-sm); outline: none; font-family: inherit;
-    }
+    input[type="number"].interval-input { width: 64px; padding: 7px 10px; font-size: 0.88rem; text-align: center; background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: var(--radius-sm); outline: none; font-family: inherit; }
     input[type="number"].interval-input:focus { border-color: var(--accent); }
     input[type="number"].interval-input::-webkit-inner-spin-button { opacity: 0.4; }
     .interval-days { font-size: 0.82rem; color: var(--muted); }
     .btn-sm { padding: 6px 10px; font-size: 0.8rem; }
-    .interval-badge {
-      display: inline-block; font-size: 0.68rem; font-weight: 500;
-      background: var(--surface2); border: 1px solid var(--border); color: var(--muted);
-      border-radius: 4px; padding: 1px 5px; margin-left: 6px; vertical-align: middle; letter-spacing: 0.02em;
-    }
+    .interval-badge { display: inline-block; font-size: 0.68rem; font-weight: 500; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); border-radius: 4px; padding: 1px 5px; margin-left: 6px; vertical-align: middle; }
 
-    /* Log form */
     .log-form { display: none; flex-direction: column; gap: 8px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
     .log-form.open { display: flex; }
     .log-form-row { display: flex; gap: 8px; align-items: center; }
@@ -266,7 +190,6 @@
     .log-form textarea { resize: vertical; min-height: 60px; width: 100%; font-size: 0.88rem; }
     .log-form-actions { display: flex; gap: 8px; }
 
-    /* History */
     .history-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
     .history-empty { color: var(--muted); font-size: 0.85rem; }
     .history-entries { display: flex; flex-direction: column; gap: 6px; }
@@ -277,73 +200,48 @@
     .history-entry-actions { margin-left: auto; flex-shrink: 0; }
     .btn-del-entry { background: transparent; color: var(--muted); padding: 0 4px; font-size: 0.8rem; }
     .btn-del-entry:hover { color: var(--red); }
+    .delete-friend-row { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; }
 
-    .delete-friend-row {
-      margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border);
-      display: flex; justify-content: flex-end;
-    }
-
-    /* ── Empty state ──────────────────────────────────────────────────────── */
     .empty-state { text-align: center; padding: 60px 24px; color: var(--muted); }
     .empty-state h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 6px; color: var(--text); }
     .empty-state p  { font-size: 0.88rem; }
 
     /* ── Import modal ─────────────────────────────────────────────────────── */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
-      z-index: 100; align-items: center; justify-content: center; padding: 16px;
-    }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
     .modal-overlay.open { display: flex; }
-
-    .modal {
-      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-      width: 100%; max-width: 560px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden;
-    }
+    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); width: 100%; max-width: 560px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; }
     .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
     .modal-header h2 { font-size: 1rem; font-weight: 600; }
     .btn-close { background: transparent; color: var(--muted); font-size: 1.1rem; padding: 4px 8px; }
     .btn-close:hover { color: var(--text); }
-
     .modal-body { padding: 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 14px; }
     .modal-hint { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
     .import-tabs { display: flex; gap: 4px; background: var(--surface2); border-radius: var(--radius-sm); padding: 3px; }
     .import-tab { flex: 1; background: transparent; color: var(--muted); padding: 6px 12px; font-size: 0.85rem; border-radius: 4px; font-weight: 500; }
     .import-tab.active { background: var(--surface); color: var(--text); }
-    .import-file-label {
-      display: flex; align-items: center; justify-content: center; background: var(--surface2);
-      border: 1px dashed var(--border); border-radius: var(--radius-sm); padding: 20px;
-      cursor: pointer; font-size: 0.88rem; color: var(--muted); transition: border-color 0.15s;
-    }
+    .import-file-label { display: flex; align-items: center; justify-content: center; background: var(--surface2); border: 1px dashed var(--border); border-radius: var(--radius-sm); padding: 20px; cursor: pointer; font-size: 0.88rem; color: var(--muted); transition: border-color 0.15s; }
     .import-file-label:hover { border-color: var(--accent); color: var(--text); }
     #csvFile { display: none; }
     #csvPaste { width: 100%; min-height: 120px; resize: vertical; font-size: 0.78rem; font-family: monospace; }
-    .import-preview {
-      background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm);
-      padding: 12px 14px; font-size: 0.85rem; display: flex; flex-direction: column; gap: 4px;
-    }
+    .import-preview { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 0.85rem; display: flex; flex-direction: column; gap: 4px; }
     .preview-ok   { color: var(--green); }
     .preview-warn { color: var(--yellow); }
     .preview-info { color: var(--muted); }
     .modal-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 20px; border-top: 1px solid var(--border); flex-shrink: 0; }
 
     /* ── Toast ────────────────────────────────────────────────────────────── */
-    #toast {
-      position: fixed; bottom: 24px; left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm);
-      padding: 10px 20px; font-size: 0.88rem; color: var(--text);
-      transition: transform 0.25s ease; pointer-events: none; white-space: nowrap;
-    }
+    #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 20px; font-size: 0.88rem; color: var(--text); transition: transform 0.25s ease; pointer-events: none; white-space: nowrap; }
     #toast.show { transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
 
 <!-- Auth overlay -->
-<div class="auth-overlay" id="authOverlay">
+<div class="auth-overlay visible" id="authOverlay">
   <div class="auth-card">
     <h1>Friend Tracker</h1>
     <p>Sign in with Google to sync your data across all your devices.</p>
+    <div class="auth-error" id="authError"></div>
     <button class="btn-google" id="signInBtn">
       <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
       Sign in with Google
@@ -356,21 +254,18 @@
     <h1>Friend Tracker</h1>
     <p>Stay in touch — see who you haven't reached out to lately.</p>
   </div>
-  <div class="user-nav" id="userNav">
+  <div class="user-nav" id="userNav" style="display:none">
     <div class="user-avatar" id="userAvatar"></div>
-    <button class="btn-signout" id="signOutBtn">Sign out</button>
+    <button class="btn-signout" onclick="doSignOut()">Sign out</button>
   </div>
 </header>
 
 <div class="main" id="mainApp" style="display:none">
-
   <form class="add-form" id="addForm">
     <input type="text" id="nameInput" placeholder="Add a friend's name…" autocomplete="off" maxlength="60" />
     <button type="submit" class="btn-primary">Add</button>
   </form>
-
   <div class="stats" id="statsBar"></div>
-
   <div class="toolbar">
     <div>
       <label for="sortSelect">Sort by</label>
@@ -382,11 +277,9 @@
     </div>
     <button class="btn-ghost" style="font-size:0.82rem;padding:6px 12px" onclick="openImport()">Import CSV</button>
   </div>
-
   <div id="loadingState" class="visible">Loading…</div>
   <div class="friends-list" id="friendsList"></div>
 
-  <!-- Import modal -->
   <div class="modal-overlay" id="importModal">
     <div class="modal">
       <div class="modal-header">
@@ -394,10 +287,7 @@
         <button class="btn-close" onclick="closeImport()">✕</button>
       </div>
       <div class="modal-body">
-        <p class="modal-hint">
-          In Google Sheets: <strong>File → Download → Comma-separated values (.csv)</strong>.
-          Expected columns: <em>name, Last Contact Date, Communication Method, Notes/Topic, Next Follow-up Date</em>
-        </p>
+        <p class="modal-hint">In Google Sheets: <strong>File → Download → Comma-separated values (.csv)</strong>. Expected columns: <em>name, Last Contact Date, Communication Method, Notes/Topic, Next Follow-up Date</em></p>
         <div class="import-tabs">
           <button class="import-tab active" id="tabFile"  onclick="switchImportTab('file')">Upload file</button>
           <button class="import-tab"        id="tabPaste" onclick="switchImportTab('paste')">Paste CSV</button>
@@ -417,32 +307,30 @@
       </div>
     </div>
   </div>
-
 </div>
 
 <div id="toast"></div>
 
-<script type="module">
-  import { initializeApp }                                          from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-  import { getAuth, signInWithRedirect, getRedirectResult,
-           GoogleAuthProvider, onAuthStateChanged, signOut }        from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-  import { getFirestore, doc, getDoc, setDoc }                     from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+<!-- Firebase compat SDK (plain script tags, no bundler needed) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
+<script>
   // ── Firebase init ──────────────────────────────────────────────────────────
 
-  const firebaseConfig = {
+  firebase.initializeApp({
     apiKey:            "AIzaSyClhFbofohAZ9pH1x3HkN89hfmg3zP5skc",
     authDomain:        "friend-tracker-b46cd.firebaseapp.com",
     projectId:         "friend-tracker-b46cd",
     storageBucket:     "friend-tracker-b46cd.firebasestorage.app",
     messagingSenderId: "292120629171",
     appId:             "1:292120629171:web:3970758be522dfcddbc5c6"
-  };
+  });
 
-  const fbApp    = initializeApp(firebaseConfig);
-  const auth     = getAuth(fbApp);
-  const db       = getFirestore(fbApp);
-  const provider = new GoogleAuthProvider();
+  const auth     = firebase.auth();
+  const db       = firebase.firestore();
+  const provider = new firebase.auth.GoogleAuthProvider();
 
   // ── State ──────────────────────────────────────────────────────────────────
 
@@ -453,37 +341,34 @@
   let parsedImportRows = [];
   let saveTimer;
 
-  // ── Cloud storage ──────────────────────────────────────────────────────────
+  // ── Auth helpers ───────────────────────────────────────────────────────────
 
-  async function loadFromCloud(uid) {
-    const snap = await getDoc(doc(db, 'users', uid));
-    return snap.exists() ? (snap.data().friends || []) : [];
+  function showAuthError(msg) {
+    const el = document.getElementById('authError');
+    el.textContent = msg;
+    el.classList.add('visible');
+    document.getElementById('signInBtn').disabled = false;
   }
 
-  function saveToCloud() {
-    clearTimeout(saveTimer);
-    saveTimer = setTimeout(async () => {
-      if (!currentUser) return;
-      await setDoc(doc(db, 'users', currentUser.uid), { friends });
-    }, 600);
-  }
+  // Handle the return from a redirect sign-in
+  auth.getRedirectResult().then(result => {
+    // onAuthStateChanged will handle the rest
+  }).catch(e => {
+    showAuthError('Sign-in error: ' + e.message + ' (code: ' + e.code + ')');
+  });
 
-  // ── Auth ───────────────────────────────────────────────────────────────────
-
-  onAuthStateChanged(auth, async user => {
+  // Auth state listener
+  auth.onAuthStateChanged(async user => {
     if (user) {
       currentUser = user;
       document.getElementById('authOverlay').classList.remove('visible');
       document.getElementById('mainApp').style.display = '';
       document.getElementById('userNav').style.display = '';
 
-      // Avatar
       const avatarEl = document.getElementById('userAvatar');
-      if (user.photoURL) {
-        avatarEl.innerHTML = `<img src="${user.photoURL}" alt="" />`;
-      } else {
-        avatarEl.textContent = (user.displayName || user.email || '?')[0].toUpperCase();
-      }
+      avatarEl.innerHTML = user.photoURL
+        ? `<img src="${user.photoURL}" alt="" />`
+        : escHtml((user.displayName || user.email || '?')[0].toUpperCase());
 
       document.getElementById('loadingState').classList.add('visible');
       friends = await loadFromCloud(user.uid);
@@ -498,32 +383,45 @@
     }
   });
 
-  // Handle redirect result on page load (returning from Google sign-in)
-  getRedirectResult(auth).catch(e => {
-    console.error('Redirect sign-in error:', e);
-    toast('Sign-in failed — please try again.');
-  });
+  function signIn() {
+    document.getElementById('signInBtn').disabled = true;
+    document.getElementById('authError').classList.remove('visible');
 
-  window.signIn = async () => {
-    await signInWithRedirect(auth, provider);
-  };
+    // Try popup first; fall back to redirect if blocked
+    auth.signInWithPopup(provider).catch(e => {
+      if (e.code === 'auth/popup-blocked' || e.code === 'auth/popup-closed-by-user') {
+        auth.signInWithRedirect(provider);
+      } else {
+        showAuthError('Sign-in failed: ' + e.message + ' (code: ' + e.code + ')');
+      }
+    });
+  }
 
-  window.doSignOut = async () => {
-    await signOut(auth);
-  };
+  function doSignOut() {
+    auth.signOut();
+  }
 
-  document.getElementById('signInBtn').addEventListener('click', () => window.signIn());
-  document.getElementById('signOutBtn').addEventListener('click', () => window.doSignOut());
+  document.getElementById('signInBtn').addEventListener('click', signIn);
+
+  // ── Cloud storage ──────────────────────────────────────────────────────────
+
+  async function loadFromCloud(uid) {
+    const snap = await db.collection('users').doc(uid).get();
+    return snap.exists ? (snap.data().friends || []) : [];
+  }
+
+  function saveToCloud() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      if (!currentUser) return;
+      db.collection('users').doc(currentUser.uid).set({ friends });
+    }, 600);
+  }
 
   // ── Helpers ────────────────────────────────────────────────────────────────
 
-  function uid() {
-    return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-  }
-
-  function todayStr() {
-    return new Date().toISOString().slice(0, 10);
-  }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  function todayStr() { return new Date().toISOString().slice(0, 10); }
 
   function daysSince(dateStr) {
     if (!dateStr) return null;
@@ -536,39 +434,36 @@
   }
 
   function statusInfo(friend) {
-    const d        = daysSince(lastContactDate(friend));
+    const d = daysSince(lastContactDate(friend));
     const interval = friend.reminderDays || null;
-
     if (interval) {
       if (d === null) return { text: 'Never contacted', cls: 'muted' };
       const rem = interval - d;
-      if (rem > Math.ceil(interval * 0.25)) return { text: `Due in ${rem} day${rem === 1 ? '' : 's'}`,   cls: 'green' };
-      if (rem > 0)                           return { text: `Due in ${rem} day${rem === 1 ? '' : 's'}`,   cls: 'yellow' };
-      if (rem === 0)                         return { text: 'Due today',                                   cls: 'yellow' };
+      if (rem > Math.ceil(interval * 0.25)) return { text: `Due in ${rem} day${rem===1?'':'s'}`, cls: 'green' };
+      if (rem > 0)   return { text: `Due in ${rem} day${rem===1?'':'s'}`, cls: 'yellow' };
+      if (rem === 0) return { text: 'Due today', cls: 'yellow' };
       const over = Math.abs(rem);
-      return { text: `${over} day${over === 1 ? '' : 's'} overdue`, cls: 'red' };
+      return { text: `${over} day${over===1?'':'s'} overdue`, cls: 'red' };
     }
-
     if (d === null) return { text: 'Never contacted', cls: 'muted' };
-    if (d === 0)    return { text: 'Today',            cls: 'green' };
+    if (d === 0)    return { text: 'Today',           cls: 'green' };
     if (d === 1)    return { text: 'Yesterday',        cls: 'green' };
     if (d < 7)      return { text: `${d} days ago`,    cls: 'green' };
     if (d < 30)     return { text: `${d} days ago`,    cls: 'yellow' };
     if (d < 60)     return { text: `${d} days ago`,    cls: 'red' };
-    const weeks  = Math.round(d / 7);
-    if (d < 365)    return { text: `${weeks} weeks ago`,  cls: 'red' };
-    const months = Math.round(d / 30);
-    return { text: `${months} months ago`, cls: 'red' };
+    const weeks = Math.round(d / 7);
+    if (d < 365)    return { text: `${weeks} weeks ago`, cls: 'red' };
+    return { text: `${Math.round(d/30)} months ago`, cls: 'red' };
   }
 
   function overdueClass(friend) {
-    const d        = daysSince(lastContactDate(friend));
-    const interval = friend.reminderDays;
+    const d = daysSince(lastContactDate(friend));
     if (d === null) return 'never';
+    const interval = friend.reminderDays;
     if (interval) {
       const rem = interval - d;
-      if (rem <= 0)                                return 'overdue-high';
-      if (rem <= Math.ceil(interval * 0.25))       return 'overdue-mid';
+      if (rem <= 0) return 'overdue-high';
+      if (rem <= Math.ceil(interval * 0.25)) return 'overdue-mid';
       return 'overdue-low';
     }
     if (d >= 30) return 'overdue-high';
@@ -578,33 +473,24 @@
 
   function sortedFriends(order) {
     const list = [...friends];
-    if (order === 'name') {
-      list.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (order === 'recent') {
-      list.sort((a, b) => (lastContactDate(b) || '').localeCompare(lastContactDate(a) || ''));
-    } else {
-      list.sort((a, b) => {
+    if (order === 'name') { list.sort((a,b) => a.name.localeCompare(b.name)); }
+    else if (order === 'recent') { list.sort((a,b) => (lastContactDate(b)||'').localeCompare(lastContactDate(a)||'')); }
+    else {
+      list.sort((a,b) => {
         const da = lastContactDate(a), db = lastContactDate(b);
         if (!da && !db) return a.name.localeCompare(b.name);
-        if (!da) return -1;
-        if (!db) return  1;
+        if (!da) return -1; if (!db) return 1;
         return da.localeCompare(db);
       });
     }
     return list;
   }
 
-  function initials(name) {
-    return name.trim().split(/\s+/).slice(0, 2).map(w => w[0].toUpperCase()).join('');
-  }
-
-  function escHtml(str) {
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
+  function initials(name) { return name.trim().split(/\s+/).slice(0,2).map(w=>w[0].toUpperCase()).join(''); }
+  function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   function formatDate(str) {
-    const [y, m, d] = str.split('-');
-    return new Date(+y, +m - 1, +d).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    const [y,m,d] = str.split('-');
+    return new Date(+y,+m-1,+d).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
   }
 
   // ── Toast ──────────────────────────────────────────────────────────────────
@@ -612,8 +498,7 @@
   let toastTimer;
   function toast(msg) {
     const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.classList.add('show');
+    el.textContent = msg; el.classList.add('show');
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
   }
@@ -621,17 +506,9 @@
   // ── Render ─────────────────────────────────────────────────────────────────
 
   function renderStats() {
-    const total   = friends.length;
-    const overdue = friends.filter(f => {
-      const d = daysSince(lastContactDate(f));
-      if (d === null) return true;
-      return d >= (f.reminderDays || 30);
-    }).length;
-    const thisWeek = friends.filter(f => {
-      const d = daysSince(lastContactDate(f));
-      return d !== null && d < 7;
-    }).length;
-
+    const total    = friends.length;
+    const overdue  = friends.filter(f => { const d = daysSince(lastContactDate(f)); return d === null || d >= (f.reminderDays||30); }).length;
+    const thisWeek = friends.filter(f => { const d = daysSince(lastContactDate(f)); return d !== null && d < 7; }).length;
     document.getElementById('statsBar').innerHTML = `
       <div class="stat"><div class="stat-value">${total}</div><div class="stat-label">Friends</div></div>
       <div class="stat"><div class="stat-value" style="color:var(--red)">${overdue}</div><div class="stat-label">Overdue</div></div>
@@ -643,59 +520,42 @@
     const order  = document.getElementById('sortSelect').value;
     const sorted = sortedFriends(order);
     renderStats();
-
     if (sorted.length === 0) {
       list.innerHTML = `<div class="empty-state"><h2>No friends added yet</h2><p>Type a name above and click Add to get started.</p></div>`;
       return;
     }
-
     list.innerHTML = sorted.map(f => {
-      const si       = statusInfo(f);
-      const expanded = f.id === expandedId;
-      const logOpen  = f.id === logOpenId;
-
+      const si = statusInfo(f), expanded = f.id === expandedId, logOpen = f.id === logOpenId;
       const historyHtml = f.contacts.length === 0
         ? `<p class="history-empty">No contacts logged yet.</p>`
-        : `<div class="history-entries">
-            ${f.contacts.slice().sort((a,b) => b.date.localeCompare(a.date)).map(c => `
-              <div class="history-entry">
-                <span class="history-date">${formatDate(c.date)}</span>
-                <span class="${c.note ? 'history-note' : 'history-no-note'}">${c.note ? escHtml(c.note) : 'No note'}</span>
-                <span class="history-entry-actions">
-                  <button class="btn-del-entry" onclick="deleteContact('${f.id}','${c.id}')" title="Delete">✕</button>
-                </span>
-              </div>`).join('')}
-           </div>`;
-
+        : `<div class="history-entries">${f.contacts.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(c=>`
+            <div class="history-entry">
+              <span class="history-date">${formatDate(c.date)}</span>
+              <span class="${c.note?'history-note':'history-no-note'}">${c.note?escHtml(c.note):'No note'}</span>
+              <span class="history-entry-actions"><button class="btn-del-entry" onclick="deleteContact('${f.id}','${c.id}')" title="Delete">✕</button></span>
+            </div>`).join('')}</div>`;
       return `
         <div class="friend-card ${overdueClass(f)}" id="card-${f.id}">
           <div class="card-main" onclick="toggleExpand('${f.id}')">
             <div class="avatar">${escHtml(initials(f.name))}</div>
             <div class="friend-info">
-              <div class="friend-name">
-                ${escHtml(f.name)}
-                ${f.reminderDays ? `<span class="interval-badge">every ${f.reminderDays}d</span>` : ''}
-              </div>
+              <div class="friend-name">${escHtml(f.name)}${f.reminderDays?`<span class="interval-badge">every ${f.reminderDays}d</span>`:''}</div>
               <div class="last-contact ${si.cls}">${si.text}</div>
             </div>
             <div class="card-actions" onclick="event.stopPropagation()">
               <button class="btn-log" onclick="openLog('${f.id}')">+ Log</button>
-              <button class="btn-expand">${expanded ? '▲' : '▼'}</button>
+              <button class="btn-expand">${expanded?'▲':'▼'}</button>
             </div>
           </div>
-
-          <div class="card-detail ${expanded ? 'open' : ''}" id="detail-${f.id}">
-
+          <div class="card-detail ${expanded?'open':''}" id="detail-${f.id}">
             <div class="interval-row">
               <label for="intervalinput-${f.id}">Remind every</label>
-              <input type="number" class="interval-input" id="intervalinput-${f.id}"
-                value="${f.reminderDays || ''}" min="1" max="730" placeholder="—" />
+              <input type="number" class="interval-input" id="intervalinput-${f.id}" value="${f.reminderDays||''}" min="1" max="730" placeholder="—" />
               <span class="interval-days">days</span>
               <button class="btn-ghost btn-sm" onclick="saveReminderInterval('${f.id}')">Set</button>
-              ${f.reminderDays ? `<button class="btn-danger btn-sm" onclick="clearReminderInterval('${f.id}')">Clear</button>` : ''}
+              ${f.reminderDays?`<button class="btn-danger btn-sm" onclick="clearReminderInterval('${f.id}')">Clear</button>`:''}
             </div>
-
-            <div class="log-form ${logOpen ? 'open' : ''}" id="logform-${f.id}">
+            <div class="log-form ${logOpen?'open':''}" id="logform-${f.id}">
               <div class="log-form-row">
                 <label style="font-size:0.82rem;color:var(--muted);white-space:nowrap">Date:</label>
                 <input type="date" id="logdate-${f.id}" value="${todayStr()}" max="${todayStr()}" />
@@ -706,10 +566,8 @@
                 <button class="btn-ghost"   onclick="cancelLog('${f.id}')">Cancel</button>
               </div>
             </div>
-
             <div class="history-label">Contact history</div>
             ${historyHtml}
-
             <div class="delete-friend-row">
               <button class="btn-danger" onclick="deleteFriend('${f.id}')">Remove ${escHtml(f.name)}</button>
             </div>
@@ -720,219 +578,185 @@
 
   // ── Actions ────────────────────────────────────────────────────────────────
 
-  window.toggleExpand = id => {
+  function toggleExpand(id) {
     expandedId = expandedId === id ? null : id;
     if (expandedId !== id) logOpenId = null;
     renderFriends();
-  };
+  }
 
-  window.openLog = id => {
+  function openLog(id) {
     expandedId = id; logOpenId = id;
     renderFriends();
-    setTimeout(() => { const el = document.getElementById('lognote-' + id); if (el) el.focus(); }, 0);
-  };
+    setTimeout(() => { const el = document.getElementById('lognote-'+id); if (el) el.focus(); }, 0);
+  }
 
-  window.cancelLog = id => { logOpenId = null; renderFriends(); };
+  function cancelLog(id) { logOpenId = null; renderFriends(); }
 
-  window.submitLog = id => {
-    const dateEl = document.getElementById('logdate-' + id);
-    const noteEl = document.getElementById('lognote-' + id);
+  function submitLog(id) {
     const friend = friends.find(f => f.id === id);
     if (!friend) return;
-    friend.contacts.push({ id: uid(), date: dateEl ? dateEl.value : todayStr(), note: noteEl ? noteEl.value.trim() : '' });
-    saveToCloud();
-    logOpenId = null;
+    const date = (document.getElementById('logdate-'+id)||{}).value || todayStr();
+    const note = ((document.getElementById('lognote-'+id)||{}).value || '').trim();
+    friend.contacts.push({ id: uid(), date, note });
+    saveToCloud(); logOpenId = null;
     toast(`Logged contact with ${friend.name}`);
     renderFriends();
-  };
+  }
 
-  window.deleteContact = (friendId, contactId) => {
+  function deleteContact(friendId, contactId) {
     const friend = friends.find(f => f.id === friendId);
     if (!friend) return;
     friend.contacts = friend.contacts.filter(c => c.id !== contactId);
-    saveToCloud();
-    toast('Contact entry removed');
-    renderFriends();
-  };
+    saveToCloud(); toast('Contact entry removed'); renderFriends();
+  }
 
-  window.deleteFriend = id => {
+  function deleteFriend(id) {
     const friend = friends.find(f => f.id === id);
-    if (!friend) return;
-    if (!confirm(`Remove ${friend.name} from your tracker?`)) return;
+    if (!friend || !confirm(`Remove ${friend.name} from your tracker?`)) return;
     friends = friends.filter(f => f.id !== id);
     if (expandedId === id) expandedId = null;
     if (logOpenId  === id) logOpenId  = null;
-    saveToCloud();
-    toast(`${friend.name} removed`);
-    renderFriends();
-  };
+    saveToCloud(); toast(`${friend.name} removed`); renderFriends();
+  }
 
-  window.saveReminderInterval = id => {
-    const input  = document.getElementById('intervalinput-' + id);
-    const val    = parseInt(input ? input.value : '', 10);
+  function saveReminderInterval(id) {
+    const input = document.getElementById('intervalinput-'+id);
+    const val   = parseInt(input ? input.value : '', 10);
     const friend = friends.find(f => f.id === id);
     if (!friend) return;
     if (!val || val < 1) { toast('Enter a number of days (e.g. 14)'); return; }
-    friend.reminderDays = val;
-    saveToCloud();
-    toast(`Reminder set: every ${val} days`);
-    renderFriends();
-  };
+    friend.reminderDays = val; saveToCloud();
+    toast(`Reminder set: every ${val} days`); renderFriends();
+  }
 
-  window.clearReminderInterval = id => {
+  function clearReminderInterval(id) {
     const friend = friends.find(f => f.id === id);
     if (!friend) return;
-    friend.reminderDays = null;
-    saveToCloud();
-    toast('Reminder interval cleared');
-    renderFriends();
-  };
+    friend.reminderDays = null; saveToCloud();
+    toast('Reminder interval cleared'); renderFriends();
+  }
 
   // ── CSV Import ─────────────────────────────────────────────────────────────
 
-  window.openImport = () => {
+  function openImport() {
     document.getElementById('importModal').classList.add('open');
     document.getElementById('csvPaste').value = '';
     document.getElementById('csvFile').value  = '';
     document.getElementById('importPreview').style.display = 'none';
     document.getElementById('importConfirmBtn').disabled = true;
     parsedImportRows = [];
-  };
+  }
 
-  window.closeImport = () => document.getElementById('importModal').classList.remove('open');
+  function closeImport() { document.getElementById('importModal').classList.remove('open'); }
 
-  window.switchImportTab = tab => {
-    document.getElementById('importFileTab').style.display  = tab === 'file'  ? '' : 'none';
-    document.getElementById('importPasteTab').style.display = tab === 'paste' ? '' : 'none';
-    document.getElementById('tabFile').classList.toggle('active',  tab === 'file');
-    document.getElementById('tabPaste').classList.toggle('active', tab === 'paste');
-  };
+  function switchImportTab(tab) {
+    document.getElementById('importFileTab').style.display  = tab==='file'  ? '' : 'none';
+    document.getElementById('importPasteTab').style.display = tab==='paste' ? '' : 'none';
+    document.getElementById('tabFile').classList.toggle('active',  tab==='file');
+    document.getElementById('tabPaste').classList.toggle('active', tab==='paste');
+  }
 
   function parseCSV(text) {
     const rows = [];
     for (const line of text.trim().replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n')) {
-      const cells = []; let cur = '', inQ = false;
-      for (let i = 0; i < line.length; i++) {
-        const ch = line[i];
-        if (ch === '"') { if (inQ && line[i+1] === '"') { cur += '"'; i++; } else inQ = !inQ; }
-        else if (ch === ',' && !inQ) { cells.push(cur.trim()); cur = ''; }
-        else cur += ch;
+      const cells=[]; let cur='', inQ=false;
+      for (let i=0;i<line.length;i++) {
+        const ch=line[i];
+        if (ch==='"') { if (inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ; }
+        else if (ch===','&&!inQ) { cells.push(cur.trim()); cur=''; }
+        else cur+=ch;
       }
-      cells.push(cur.trim());
-      rows.push(cells);
+      cells.push(cur.trim()); rows.push(cells);
     }
     return rows;
   }
 
   function parseDate(str) {
-    if (!str) return null;
-    str = str.trim();
+    if (!str) return null; str=str.trim();
     if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
-    const mdy = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    const mdy=str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
     if (mdy) return `${mdy[3]}-${mdy[1].padStart(2,'0')}-${mdy[2].padStart(2,'0')}`;
-    const d = new Date(str);
-    return isNaN(d.getTime()) ? null : d.toISOString().slice(0, 10);
+    const d=new Date(str); return isNaN(d.getTime())?null:d.toISOString().slice(0,10);
   }
 
   function processCSV(text) {
-    const rows = parseCSV(text);
-    if (rows.length < 2) return { error: 'No data rows found.' };
-    const header  = rows[0].map(h => h.toLowerCase().replace(/[^a-z]/g, ''));
-    const col     = name => header.findIndex(h => h.includes(name));
-    const iName   = col('name');
-    if (iName === -1) return { error: 'Could not find a "name" column.' };
-    const iDate     = col('lastcontact') !== -1 ? col('lastcontact') : col('date');
-    const iMethod   = col('method');
-    const iNotes    = col('notes');
-    const iFollowup = col('next') !== -1 ? col('next') : col('followup');
-    const results = []; let skipped = 0;
-    for (let i = 1; i < rows.length; i++) {
-      const row  = rows[i];
-      const name = row[iName] || '';
-      if (!name) { skipped++; continue; }
-      const rawDate  = iDate    >= 0 ? row[iDate]    : '';
-      const method   = iMethod  >= 0 ? row[iMethod]  : '';
-      const notes    = iNotes   >= 0 ? row[iNotes]   : '';
-      const followup = iFollowup >= 0 ? row[iFollowup] : '';
-      const date     = parseDate(rawDate);
-      const note     = [method && `Via ${method}`, notes].filter(Boolean).join(' — ');
-      let reminderDays = null;
-      if (date && followup) {
-        const fDate = parseDate(followup);
-        if (fDate) { const diff = Math.round((new Date(fDate) - new Date(date)) / 86400000); if (diff > 0) reminderDays = diff; }
-      }
-      results.push({ name, date, note, reminderDays, badDate: !date && !!rawDate });
+    const rows=parseCSV(text);
+    if (rows.length<2) return {error:'No data rows found.'};
+    const header=rows[0].map(h=>h.toLowerCase().replace(/[^a-z]/g,''));
+    const col=name=>header.findIndex(h=>h.includes(name));
+    const iName=col('name'); if (iName===-1) return {error:'Could not find a "name" column.'};
+    const iDate=col('lastcontact')!==-1?col('lastcontact'):col('date');
+    const iMethod=col('method'), iNotes=col('notes');
+    const iFollowup=col('next')!==-1?col('next'):col('followup');
+    const results=[]; let skipped=0;
+    for (let i=1;i<rows.length;i++) {
+      const row=rows[i], name=row[iName]||'';
+      if (!name){skipped++;continue;}
+      const rawDate=iDate>=0?row[iDate]:'', method=iMethod>=0?row[iMethod]:'', notes=iNotes>=0?row[iNotes]:'', followup=iFollowup>=0?row[iFollowup]:'';
+      const date=parseDate(rawDate);
+      const note=[method&&`Via ${method}`,notes].filter(Boolean).join(' — ');
+      let reminderDays=null;
+      if (date&&followup){const fDate=parseDate(followup);if(fDate){const diff=Math.round((new Date(fDate)-new Date(date))/86400000);if(diff>0)reminderDays=diff;}}
+      results.push({name,date,note,reminderDays,badDate:!date&&!!rawDate});
     }
-    return { results, skipped };
+    return {results,skipped};
   }
 
   function showImportPreview(text) {
-    const out     = processCSV(text);
-    const preview = document.getElementById('importPreview');
-    const btn     = document.getElementById('importConfirmBtn');
-    preview.style.display = '';
-    if (out.error) { preview.innerHTML = `<span class="preview-warn">${escHtml(out.error)}</span>`; btn.disabled = true; parsedImportRows = []; return; }
-    parsedImportRows = out.results;
-    const { results, skipped } = out;
-    const existing     = results.filter(r => friends.some(f => f.name.toLowerCase() === r.name.toLowerCase()));
-    const newCount     = results.length - existing.length;
-    const withInterval = results.filter(r => r.reminderDays).length;
-    const badDates     = results.filter(r => r.badDate).length;
-    let html = `<div class="preview-ok">${results.length} people found</div>`;
-    if (newCount)          html += `<div class="preview-info">${newCount} new friend${newCount !== 1 ? 's' : ''} will be added</div>`;
-    if (existing.length)   html += `<div class="preview-info">${existing.length} already exist — contact entry will be merged</div>`;
-    if (withInterval)      html += `<div class="preview-info">${withInterval} reminder interval${withInterval !== 1 ? 's' : ''} derived from follow-up dates</div>`;
-    if (badDates)          html += `<div class="preview-warn">${badDates} row${badDates !== 1 ? 's' : ''} had unrecognizable dates — will be skipped</div>`;
-    if (skipped)           html += `<div class="preview-warn">${skipped} blank row${skipped !== 1 ? 's' : ''} skipped</div>`;
-    preview.innerHTML = html;
-    btn.disabled = results.length === 0;
+    const out=processCSV(text), preview=document.getElementById('importPreview'), btn=document.getElementById('importConfirmBtn');
+    preview.style.display='';
+    if (out.error){preview.innerHTML=`<span class="preview-warn">${escHtml(out.error)}</span>`;btn.disabled=true;parsedImportRows=[];return;}
+    parsedImportRows=out.results;
+    const {results,skipped}=out;
+    const existing=results.filter(r=>friends.some(f=>f.name.toLowerCase()===r.name.toLowerCase()));
+    const newCount=results.length-existing.length, withInterval=results.filter(r=>r.reminderDays).length, badDates=results.filter(r=>r.badDate).length;
+    let html=`<div class="preview-ok">${results.length} people found</div>`;
+    if (newCount)        html+=`<div class="preview-info">${newCount} new friend${newCount!==1?'s':''} will be added</div>`;
+    if (existing.length) html+=`<div class="preview-info">${existing.length} already exist — contact entry will be merged</div>`;
+    if (withInterval)    html+=`<div class="preview-info">${withInterval} reminder interval${withInterval!==1?'s':''} derived from follow-up dates</div>`;
+    if (badDates)        html+=`<div class="preview-warn">${badDates} row${badDates!==1?'s':''} had unrecognizable dates — will be skipped</div>`;
+    if (skipped)         html+=`<div class="preview-warn">${skipped} blank row${skipped!==1?'s':''} skipped</div>`;
+    preview.innerHTML=html; btn.disabled=results.length===0;
   }
 
-  window.confirmImport = () => {
+  function confirmImport() {
     if (!parsedImportRows.length) return;
     for (const row of parsedImportRows) {
-      let friend = friends.find(f => f.name.toLowerCase() === row.name.toLowerCase());
-      if (!friend) { friend = { id: uid(), name: row.name, contacts: [], reminderDays: null }; friends.push(friend); }
-      if (row.date) friend.contacts.push({ id: uid(), date: row.date, note: row.note });
-      if (row.reminderDays && !friend.reminderDays) friend.reminderDays = row.reminderDays;
+      let friend=friends.find(f=>f.name.toLowerCase()===row.name.toLowerCase());
+      if (!friend){friend={id:uid(),name:row.name,contacts:[],reminderDays:null};friends.push(friend);}
+      if (row.date) friend.contacts.push({id:uid(),date:row.date,note:row.note});
+      if (row.reminderDays&&!friend.reminderDays) friend.reminderDays=row.reminderDays;
     }
-    saveToCloud();
-    window.closeImport();
-    toast(`Imported ${parsedImportRows.length} friends`);
-    renderFriends();
-  };
+    saveToCloud(); closeImport();
+    toast(`Imported ${parsedImportRows.length} friends`); renderFriends();
+  }
 
   // ── Event listeners ────────────────────────────────────────────────────────
 
   document.getElementById('addForm').addEventListener('submit', e => {
     e.preventDefault();
-    const input = document.getElementById('nameInput');
-    const name  = input.value.trim();
+    const input=document.getElementById('nameInput'), name=input.value.trim();
     if (!name) return;
-    if (friends.some(f => f.name.toLowerCase() === name.toLowerCase())) { toast(`${name} is already in your list`); return; }
-    friends.push({ id: uid(), name, contacts: [], reminderDays: null });
-    saveToCloud();
-    input.value = '';
-    toast(`${name} added`);
-    renderFriends();
+    if (friends.some(f=>f.name.toLowerCase()===name.toLowerCase())){toast(`${name} is already in your list`);return;}
+    friends.push({id:uid(),name,contacts:[],reminderDays:null});
+    saveToCloud(); input.value=''; toast(`${name} added`); renderFriends();
   });
 
   document.getElementById('sortSelect').addEventListener('change', renderFriends);
 
   document.getElementById('csvFile').addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => showImportPreview(ev.target.result);
+    const file=e.target.files[0]; if (!file) return;
+    const reader=new FileReader();
+    reader.onload=ev=>showImportPreview(ev.target.result);
     reader.readAsText(file);
   });
 
   document.getElementById('csvPaste').addEventListener('input', e => {
-    if (e.target.value.trim().length > 10) showImportPreview(e.target.value);
+    if (e.target.value.trim().length>10) showImportPreview(e.target.value);
   });
 
   document.getElementById('importModal').addEventListener('click', e => {
-    if (e.target === document.getElementById('importModal')) window.closeImport();
+    if (e.target===document.getElementById('importModal')) closeImport();
   });
 </script>
 </body>
