@@ -142,6 +142,84 @@
       margin-top: 2px;
     }
 
+    /* Import modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 560px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .modal-header h2 { font-size: 1rem; font-weight: 600; }
+
+    .btn-close { background: transparent; color: var(--muted); font-size: 1.1rem; padding: 4px 8px; }
+    .btn-close:hover { color: var(--text); }
+
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .modal-hint { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+    .import-tabs { display: flex; gap: 4px; background: var(--surface2); border-radius: var(--radius-sm); padding: 3px; }
+    .import-tab { flex: 1; background: transparent; color: var(--muted); padding: 6px 12px; font-size: 0.85rem; border-radius: 4px; font-weight: 500; }
+    .import-tab.active { background: var(--surface); color: var(--text); }
+
+    .import-file-label {
+      display: flex; align-items: center; justify-content: center;
+      background: var(--surface2); border: 1px dashed var(--border);
+      border-radius: var(--radius-sm); padding: 20px; cursor: pointer;
+      font-size: 0.88rem; color: var(--muted); transition: border-color 0.15s;
+    }
+    .import-file-label:hover { border-color: var(--accent); color: var(--text); }
+    #csvFile { display: none; }
+
+    #csvPaste { width: 100%; min-height: 120px; resize: vertical; font-size: 0.78rem; font-family: monospace; }
+
+    .import-preview {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 12px 14px; font-size: 0.85rem;
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .preview-ok   { color: var(--green); }
+    .preview-warn { color: var(--yellow); }
+    .preview-info { color: var(--muted); }
+
+    .modal-footer {
+      display: flex; justify-content: flex-end; gap: 8px;
+      padding: 14px 20px; border-top: 1px solid var(--border); flex-shrink: 0;
+    }
+
     /* Sort/filter bar */
     .toolbar {
       display: flex;
@@ -449,6 +527,40 @@
         <option value="name">Name (A–Z)</option>
         <option value="recent">Most recently contacted</option>
       </select>
+    </div>
+    <button class="btn-ghost" style="font-size:0.82rem;padding:6px 12px" onclick="openImport()">Import CSV</button>
+  </div>
+
+  <!-- Import modal -->
+  <div class="modal-overlay" id="importModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Import from Google Sheets CSV</h2>
+        <button class="btn-close" onclick="closeImport()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-hint">
+          In Google Sheets: <strong>File → Download → Comma-separated values (.csv)</strong>.
+          Then upload the file or paste the contents below.
+          Expected columns: <em>name, Last Contact Date, Days since last communication, Communication Method, Notes/Topic, Next Follow-up Date</em>
+        </p>
+        <div class="import-tabs">
+          <button class="import-tab active" id="tabFile" onclick="switchImportTab('file')">Upload file</button>
+          <button class="import-tab" id="tabPaste" onclick="switchImportTab('paste')">Paste CSV</button>
+        </div>
+        <div id="importFileTab">
+          <label class="import-file-label" for="csvFile">Click to choose a .csv file</label>
+          <input type="file" id="csvFile" accept=".csv" />
+        </div>
+        <div id="importPasteTab" style="display:none">
+          <textarea id="csvPaste" placeholder="Paste CSV text here…"></textarea>
+        </div>
+        <div id="importPreview" style="display:none" class="import-preview"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" onclick="closeImport()">Cancel</button>
+        <button class="btn-primary" id="importConfirmBtn" onclick="confirmImport()" disabled>Import</button>
+      </div>
     </div>
   </div>
 
@@ -800,6 +912,178 @@
     renderFriends();
   }
 
+  // ── CSV Import ─────────────────────────────────────────────────────────────
+
+  let parsedImportRows = [];
+
+  function openImport() {
+    document.getElementById('importModal').classList.add('open');
+    document.getElementById('csvPaste').value = '';
+    document.getElementById('csvFile').value = '';
+    document.getElementById('importPreview').style.display = 'none';
+    document.getElementById('importConfirmBtn').disabled = true;
+    parsedImportRows = [];
+  }
+
+  function closeImport() {
+    document.getElementById('importModal').classList.remove('open');
+  }
+
+  function switchImportTab(tab) {
+    document.getElementById('importFileTab').style.display  = tab === 'file'  ? '' : 'none';
+    document.getElementById('importPasteTab').style.display = tab === 'paste' ? '' : 'none';
+    document.getElementById('tabFile').classList.toggle('active',  tab === 'file');
+    document.getElementById('tabPaste').classList.toggle('active', tab === 'paste');
+  }
+
+  // Parse CSV respecting quoted fields
+  function parseCSV(text) {
+    const rows = [];
+    const lines = text.trim().replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+    for (const line of lines) {
+      const cells = [];
+      let cur = '', inQ = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          if (inQ && line[i+1] === '"') { cur += '"'; i++; }
+          else inQ = !inQ;
+        } else if (ch === ',' && !inQ) {
+          cells.push(cur.trim()); cur = '';
+        } else {
+          cur += ch;
+        }
+      }
+      cells.push(cur.trim());
+      rows.push(cells);
+    }
+    return rows;
+  }
+
+  // Try to parse a date string to YYYY-MM-DD
+  function parseDate(str) {
+    if (!str) return null;
+    str = str.trim();
+    if (!str) return null;
+    // Already YYYY-MM-DD
+    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+    // M/D/YYYY or MM/DD/YYYY
+    const mdy = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (mdy) {
+      const [, m, d, y] = mdy;
+      return `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
+    }
+    // Try native Date parse as fallback
+    const d = new Date(str);
+    if (!isNaN(d.getTime())) return d.toISOString().slice(0, 10);
+    return null;
+  }
+
+  function processCSV(text) {
+    const rows = parseCSV(text);
+    if (rows.length < 2) return { error: 'No data rows found.' };
+
+    // Normalize header names
+    const header = rows[0].map(h => h.toLowerCase().replace(/[^a-z]/g, ''));
+    const col = name => header.findIndex(h => h.includes(name));
+
+    const iName    = col('name');
+    const iDate    = col('lastcontact') !== -1 ? col('lastcontact') : col('date');
+    const iMethod  = col('method');
+    const iNotes   = col('notes');
+    const iFollowup = col('next') !== -1 ? col('next') : col('followup');
+
+    if (iName === -1) return { error: 'Could not find a "name" column.' };
+
+    const results = [];
+    let skipped = 0;
+
+    for (let i = 1; i < rows.length; i++) {
+      const row = rows[i];
+      const name = row[iName] || '';
+      if (!name) { skipped++; continue; }
+
+      const rawDate   = iDate    >= 0 ? row[iDate]    : '';
+      const method    = iMethod  >= 0 ? row[iMethod]  : '';
+      const notes     = iNotes   >= 0 ? row[iNotes]   : '';
+      const followup  = iFollowup >= 0 ? row[iFollowup] : '';
+
+      const date = parseDate(rawDate);
+
+      // Build combined note
+      const noteParts = [method && `Via ${method}`, notes].filter(Boolean);
+      const note = noteParts.join(' — ');
+
+      // Derive reminderDays from gap between last contact and next follow-up
+      let reminderDays = null;
+      if (date && followup) {
+        const fDate = parseDate(followup);
+        if (fDate) {
+          const diff = Math.round((new Date(fDate) - new Date(date)) / 86400000);
+          if (diff > 0) reminderDays = diff;
+        }
+      }
+
+      results.push({ name, date, note, reminderDays, badDate: !date && !!rawDate });
+    }
+
+    return { results, skipped };
+  }
+
+  function showImportPreview(text) {
+    const out = processCSV(text);
+    const preview = document.getElementById('importPreview');
+    const confirmBtn = document.getElementById('importConfirmBtn');
+    preview.style.display = '';
+
+    if (out.error) {
+      preview.innerHTML = `<span class="preview-warn">${escHtml(out.error)}</span>`;
+      confirmBtn.disabled = true;
+      parsedImportRows = [];
+      return;
+    }
+
+    parsedImportRows = out.results;
+    const { results, skipped } = out;
+    const existing = results.filter(r => friends.some(f => f.name.toLowerCase() === r.name.toLowerCase()));
+    const newCount  = results.length - existing.length;
+    const badDates  = results.filter(r => r.badDate).length;
+    const withInterval = results.filter(r => r.reminderDays).length;
+
+    let html = `<div class="preview-ok">${results.length} people found</div>`;
+    if (newCount)   html += `<div class="preview-info">${newCount} new friend${newCount !== 1 ? 's' : ''} will be added</div>`;
+    if (existing.length) html += `<div class="preview-info">${existing.length} already exist — contact entry will be merged</div>`;
+    if (withInterval) html += `<div class="preview-info">${withInterval} reminder interval${withInterval !== 1 ? 's' : ''} derived from follow-up dates</div>`;
+    if (badDates)   html += `<div class="preview-warn">${badDates} row${badDates !== 1 ? 's' : ''} had unrecognizable dates — contact entry will be skipped</div>`;
+    if (skipped)    html += `<div class="preview-warn">${skipped} blank row${skipped !== 1 ? 's' : ''} skipped</div>`;
+
+    preview.innerHTML = html;
+    confirmBtn.disabled = results.length === 0;
+  }
+
+  function confirmImport() {
+    if (!parsedImportRows.length) return;
+
+    for (const row of parsedImportRows) {
+      let friend = friends.find(f => f.name.toLowerCase() === row.name.toLowerCase());
+      if (!friend) {
+        friend = { id: uid(), name: row.name, contacts: [], reminderDays: null };
+        friends.push(friend);
+      }
+      if (row.date) {
+        friend.contacts.push({ id: uid(), date: row.date, note: row.note });
+      }
+      if (row.reminderDays && !friend.reminderDays) {
+        friend.reminderDays = row.reminderDays;
+      }
+    }
+
+    save(friends);
+    closeImport();
+    toast(`Imported ${parsedImportRows.length} friends`);
+    renderFriends();
+  }
+
   // ── Event listeners ────────────────────────────────────────────────────────
 
   document.getElementById('addForm').addEventListener('submit', e => {
@@ -821,6 +1105,23 @@
   });
 
   document.getElementById('sortSelect').addEventListener('change', renderFriends);
+
+  document.getElementById('csvFile').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => showImportPreview(ev.target.result);
+    reader.readAsText(file);
+  });
+
+  document.getElementById('csvPaste').addEventListener('input', e => {
+    const text = e.target.value.trim();
+    if (text.length > 10) showImportPreview(text);
+  });
+
+  document.getElementById('importModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('importModal')) closeImport();
+  });
 
   // ── Init ───────────────────────────────────────────────────────────────────
 
