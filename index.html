@@ -373,6 +373,21 @@
       document.getElementById('loadingState').classList.add('visible');
       friends = await loadFromCloud(user.uid);
       document.getElementById('loadingState').classList.remove('visible');
+
+      // One-time migration from localStorage
+      const legacy = localStorage.getItem('friend-tracker-v1');
+      if (legacy && friends.length === 0) {
+        try {
+          const parsed = JSON.parse(legacy);
+          if (parsed.length > 0 && confirm(`Found ${parsed.length} friends saved locally. Move them to your account?`)) {
+            friends = parsed;
+            await db.collection('users').doc(user.uid).set({ friends });
+            localStorage.removeItem('friend-tracker-v1');
+            toast(`Migrated ${friends.length} friends to your account`);
+          }
+        } catch (e) { /* ignore malformed data */ }
+      }
+
       renderFriends();
     } else {
       currentUser = null;
