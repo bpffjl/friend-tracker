@@ -429,12 +429,15 @@
     return snap.exists ? (snap.data().friends || []) : [];
   }
 
-  function saveToCloud() {
+  function saveToCloud(immediate) {
     clearTimeout(saveTimer);
-    saveTimer = setTimeout(() => {
+    const doSave = () => {
       if (!currentUser) return;
-      db.collection('users').doc(currentUser.uid).set({ friends });
-    }, 600);
+      db.collection('users').doc(currentUser.uid).set({ friends })
+        .catch(e => toast('Save failed: ' + e.message));
+    };
+    if (immediate) doSave();
+    else saveTimer = setTimeout(doSave, 600);
   }
 
   // ── Helpers ────────────────────────────────────────────────────────────────
@@ -746,7 +749,7 @@
       if (row.date) friend.contacts.push({id:uid(),date:row.date,note:row.note});
       if (row.reminderDays&&!friend.reminderDays) friend.reminderDays=row.reminderDays;
     }
-    saveToCloud(); closeImport();
+    saveToCloud(true); closeImport();
     toast(`Imported ${parsedImportRows.length} friends`); renderFriends();
   }
 
