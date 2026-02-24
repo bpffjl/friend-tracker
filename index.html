@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Friend Tracker</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2e3250;
+      --text: #e2e8f0;
+      --muted: #8892a4;
+      --accent: #6366f1;
+      --accent-hover: #818cf8;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --red: #ef4444;
+      --danger: #7f1d1d;
+      --danger-text: #fca5a5;
+      --radius: 10px;
+      --radius-sm: 6px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px 16px 48px;
+    }
+
+    header {
+      max-width: 680px;
+      margin: 0 auto 32px;
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    header p {
+      color: var(--muted);
+      margin-top: 4px;
+      font-size: 0.9rem;
+    }
+
+    .main { max-width: 680px; margin: 0 auto; }
+
+    /* Add friend form */
+    .add-form {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    input[type="text"], input[type="date"], textarea {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.15s;
+      font-family: inherit;
+    }
+
+    input[type="text"]:focus, input[type="date"]:focus, textarea:focus {
+      border-color: var(--accent);
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.7);
+      cursor: pointer;
+    }
+
+    .add-form input { flex: 1; }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-family: inherit;
+      font-weight: 500;
+      padding: 10px 16px;
+      transition: background 0.15s, opacity 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      white-space: nowrap;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    .btn-ghost {
+      background: var(--surface2);
+      color: var(--text);
+    }
+    .btn-ghost:hover { background: var(--border); }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--muted);
+      padding: 6px 10px;
+      font-size: 0.8rem;
+    }
+    .btn-danger:hover { color: var(--red); }
+
+    /* Stats bar */
+    .stats {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 16px;
+      flex: 1;
+      min-width: 100px;
+    }
+
+    .stat-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* Sort/filter bar */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .toolbar label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-right: 6px;
+    }
+
+    .toolbar select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: var(--radius-sm);
+      padding: 5px 10px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Friend cards */
+    .friends-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .friend-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.15s;
+    }
+
+    .friend-card.overdue-high { border-left: 3px solid var(--red); }
+    .friend-card.overdue-mid  { border-left: 3px solid var(--yellow); }
+    .friend-card.overdue-low  { border-left: 3px solid var(--green); }
+    .friend-card.never        { border-left: 3px solid var(--muted); }
+
+    .card-main {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .friend-info { flex: 1; min-width: 0; }
+
+    .friend-name {
+      font-weight: 600;
+      font-size: 1rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .last-contact {
+      font-size: 0.8rem;
+      margin-top: 2px;
+    }
+
+    .last-contact.green { color: var(--green); }
+    .last-contact.yellow { color: var(--yellow); }
+    .last-contact.red { color: var(--red); }
+    .last-contact.muted { color: var(--muted); }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-log {
+      background: var(--accent);
+      color: #fff;
+      padding: 7px 12px;
+      font-size: 0.82rem;
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+    }
+    .btn-log:hover { background: var(--accent-hover); }
+
+    .btn-expand {
+      background: transparent;
+      color: var(--muted);
+      font-size: 1rem;
+      padding: 6px 8px;
+      line-height: 1;
+    }
+    .btn-expand:hover { color: var(--text); }
+
+    /* Expandable detail panel */
+    .card-detail {
+      border-top: 1px solid var(--border);
+      padding: 14px 16px;
+      display: none;
+    }
+
+    .card-detail.open { display: block; }
+
+    /* Log form inside card */
+    .log-form {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .log-form.open { display: flex; }
+
+    .log-form-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .log-form-row input[type="date"] { flex: 1; }
+
+    .log-form textarea {
+      resize: vertical;
+      min-height: 60px;
+      width: 100%;
+      font-size: 0.88rem;
+    }
+
+    .log-form-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* History list */
+    .history-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+
+    .history-empty {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .history-entries { display: flex; flex-direction: column; gap: 6px; }
+
+    .history-entry {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 0.85rem;
+    }
+
+    .history-date {
+      color: var(--muted);
+      white-space: nowrap;
+      min-width: 90px;
+    }
+
+    .history-note { color: var(--text); word-break: break-word; }
+    .history-no-note { color: var(--muted); font-style: italic; }
+
+    .history-entry-actions {
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .btn-del-entry {
+      background: transparent;
+      color: var(--muted);
+      padding: 0 4px;
+      font-size: 0.8rem;
+    }
+    .btn-del-entry:hover { color: var(--red); }
+
+    .delete-friend-row {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* Reminder interval row */
+    .interval-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .interval-row label {
+      font-size: 0.82rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    input[type="number"].interval-input {
+      width: 64px;
+      padding: 7px 10px;
+      font-size: 0.88rem;
+      text-align: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: var(--radius-sm);
+      outline: none;
+      font-family: inherit;
+    }
+
+    input[type="number"].interval-input:focus { border-color: var(--accent); }
+    input[type="number"].interval-input::-webkit-inner-spin-button { opacity: 0.4; }
+
+    .interval-days { font-size: 0.82rem; color: var(--muted); }
+
+    .btn-sm { padding: 6px 10px; font-size: 0.8rem; }
+
+    .interval-badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 500;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 4px;
+      padding: 1px 5px;
+      margin-left: 6px;
+      vertical-align: middle;
+      letter-spacing: 0.02em;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--muted);
+    }
+    .empty-state h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+    .empty-state p  { font-size: 0.88rem; }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 20px;
+      font-size: 0.88rem;
+      color: var(--text);
+      transition: transform 0.25s ease;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Friend Tracker</h1>
+  <p>Stay in touch — see who you haven't reached out to lately.</p>
+</header>
+
+<div class="main">
+
+  <form class="add-form" id="addForm">
+    <input type="text" id="nameInput" placeholder="Add a friend's name…" autocomplete="off" maxlength="60" />
+    <button type="submit" class="btn-primary">Add</button>
+  </form>
+
+  <div class="stats" id="statsBar"></div>
+
+  <div class="toolbar">
+    <div>
+      <label for="sortSelect">Sort by</label>
+      <select id="sortSelect">
+        <option value="overdue">Most overdue</option>
+        <option value="name">Name (A–Z)</option>
+        <option value="recent">Most recently contacted</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="friends-list" id="friendsList"></div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+  // ── Storage ────────────────────────────────────────────────────────────────
+
+  const STORAGE_KEY = 'friend-tracker-v1';
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch { return []; }
+  }
+
+  function save(friends) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(friends));
+  }
+
+  // ── State ──────────────────────────────────────────────────────────────────
+
+  let friends = load();        // [{ id, name, contacts: [{id, date, note}] }]
+  let expandedId = null;
+  let logOpenId = null;
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+
+  function uid() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+
+  function todayStr() {
+    const d = new Date();
+    return d.toISOString().slice(0, 10);
+  }
+
+  function daysSince(dateStr) {
+    if (!dateStr) return null;
+    const ms = Date.now() - new Date(dateStr).getTime();
+    return Math.floor(ms / 86400000);
+  }
+
+  function statusInfo(friend) {
+    const d = daysSince(lastContactDate(friend));
+    const interval = friend.reminderDays || null;
+
+    if (interval) {
+      if (d === null) return { text: 'Never contacted', cls: 'muted' };
+      const remaining = interval - d;
+      if (remaining > Math.ceil(interval * 0.25)) return { text: `Due in ${remaining} day${remaining === 1 ? '' : 's'}`, cls: 'green' };
+      if (remaining > 0)  return { text: `Due in ${remaining} day${remaining === 1 ? '' : 's'}`, cls: 'yellow' };
+      if (remaining === 0) return { text: 'Due today', cls: 'yellow' };
+      const over = Math.abs(remaining);
+      return { text: `${over} day${over === 1 ? '' : 's'} overdue`, cls: 'red' };
+    }
+
+    if (d === null) return { text: 'Never contacted', cls: 'muted' };
+    if (d === 0)   return { text: 'Today',            cls: 'green' };
+    if (d === 1)   return { text: 'Yesterday',        cls: 'green' };
+    if (d < 7)     return { text: `${d} days ago`,    cls: 'green' };
+    if (d < 30)    return { text: `${d} days ago`,    cls: 'yellow' };
+    if (d < 60)    return { text: `${d} days ago`,    cls: 'red' };
+    const weeks = Math.round(d / 7);
+    if (d < 365)   return { text: `${weeks} weeks ago`, cls: 'red' };
+    const months = Math.round(d / 30);
+    return { text: `${months} months ago`, cls: 'red' };
+  }
+
+  function lastContactDate(friend) {
+    if (!friend.contacts.length) return null;
+    return friend.contacts.slice().sort((a, b) => b.date.localeCompare(a.date))[0].date;
+  }
+
+  function overdueClass(friend) {
+    const d = daysSince(lastContactDate(friend));
+    if (d === null) return 'never';
+    const interval = friend.reminderDays;
+    if (interval) {
+      const remaining = interval - d;
+      if (remaining <= 0) return 'overdue-high';
+      if (remaining <= Math.ceil(interval * 0.25)) return 'overdue-mid';
+      return 'overdue-low';
+    }
+    if (d >= 30) return 'overdue-high';
+    if (d >= 7)  return 'overdue-mid';
+    return 'overdue-low';
+  }
+
+  function sortedFriends(order) {
+    const list = [...friends];
+    if (order === 'name') {
+      list.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (order === 'recent') {
+      list.sort((a, b) => {
+        const da = lastContactDate(a) || '';
+        const db = lastContactDate(b) || '';
+        return db.localeCompare(da);
+      });
+    } else { // overdue
+      list.sort((a, b) => {
+        const da = lastContactDate(a);
+        const db = lastContactDate(b);
+        if (!da && !db) return a.name.localeCompare(b.name);
+        if (!da) return -1;
+        if (!db) return 1;
+        return da.localeCompare(db); // oldest first
+      });
+    }
+    return list;
+  }
+
+  function initials(name) {
+    return name.trim().split(/\s+/).slice(0, 2).map(w => w[0].toUpperCase()).join('');
+  }
+
+  // ── Toast ──────────────────────────────────────────────────────────────────
+
+  let toastTimer;
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+  }
+
+  // ── Render ─────────────────────────────────────────────────────────────────
+
+  function renderStats() {
+    const total = friends.length;
+    const overdue = friends.filter(f => {
+      const d = daysSince(lastContactDate(f));
+      if (d === null) return true;
+      const interval = f.reminderDays || 30;
+      return d >= interval;
+    }).length;
+    const thisWeek = friends.filter(f => {
+      const d = daysSince(lastContactDate(f));
+      return d !== null && d < 7;
+    }).length;
+
+    document.getElementById('statsBar').innerHTML = `
+      <div class="stat">
+        <div class="stat-value">${total}</div>
+        <div class="stat-label">Friends</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" style="color:var(--red)">${overdue}</div>
+        <div class="stat-label">Overdue (&gt;30 days)</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" style="color:var(--green)">${thisWeek}</div>
+        <div class="stat-label">Contacted this week</div>
+      </div>
+    `;
+  }
+
+  function renderFriends() {
+    const list = document.getElementById('friendsList');
+    const order = document.getElementById('sortSelect').value;
+    const sorted = sortedFriends(order);
+
+    renderStats();
+
+    if (sorted.length === 0) {
+      list.innerHTML = `
+        <div class="empty-state">
+          <h2>No friends added yet</h2>
+          <p>Type a name above and click Add to get started.</p>
+        </div>`;
+      return;
+    }
+
+    list.innerHTML = sorted.map(f => {
+      const si = statusInfo(f);
+      const expanded = f.id === expandedId;
+      const logOpen  = f.id === logOpenId;
+
+      const historyHtml = f.contacts.length === 0
+        ? `<p class="history-empty">No contacts logged yet.</p>`
+        : `<div class="history-entries">
+            ${f.contacts
+              .slice()
+              .sort((a, b) => b.date.localeCompare(a.date))
+              .map(c => `
+                <div class="history-entry">
+                  <span class="history-date">${formatDate(c.date)}</span>
+                  <span class="${c.note ? 'history-note' : 'history-no-note'}">${
+                    c.note ? escHtml(c.note) : 'No note'
+                  }</span>
+                  <span class="history-entry-actions">
+                    <button class="btn-del-entry" onclick="deleteContact('${f.id}','${c.id}')" title="Delete">✕</button>
+                  </span>
+                </div>`).join('')}
+          </div>`;
+
+      return `
+        <div class="friend-card ${overdueClass(f)}" id="card-${f.id}">
+          <div class="card-main" onclick="toggleExpand('${f.id}')">
+            <div class="avatar">${escHtml(initials(f.name))}</div>
+            <div class="friend-info">
+              <div class="friend-name">
+                ${escHtml(f.name)}
+                ${f.reminderDays ? `<span class="interval-badge">every ${f.reminderDays}d</span>` : ''}
+              </div>
+              <div class="last-contact ${si.cls}">${si.text}</div>
+            </div>
+            <div class="card-actions" onclick="event.stopPropagation()">
+              <button class="btn-log" onclick="openLog('${f.id}')">+ Log</button>
+              <button class="btn-expand">${expanded ? '▲' : '▼'}</button>
+            </div>
+          </div>
+
+          <div class="card-detail ${expanded ? 'open' : ''}" id="detail-${f.id}">
+
+            <div class="interval-row">
+              <label for="intervalinput-${f.id}">Remind every</label>
+              <input type="number" class="interval-input" id="intervalinput-${f.id}"
+                value="${f.reminderDays || ''}" min="1" max="730" placeholder="—" />
+              <span class="interval-days">days</span>
+              <button class="btn-ghost btn-sm" onclick="saveReminderInterval('${f.id}')">Set</button>
+              ${f.reminderDays ? `<button class="btn-danger btn-sm" onclick="clearReminderInterval('${f.id}')">Clear</button>` : ''}
+            </div>
+
+            <div class="log-form ${logOpen ? 'open' : ''}" id="logform-${f.id}">
+              <div class="log-form-row">
+                <label style="font-size:0.82rem;color:var(--muted);white-space:nowrap">Date:</label>
+                <input type="date" id="logdate-${f.id}" value="${todayStr()}" max="${todayStr()}" />
+              </div>
+              <textarea id="lognote-${f.id}" placeholder="Optional note (call, coffee, text…)"></textarea>
+              <div class="log-form-actions">
+                <button class="btn-primary" onclick="submitLog('${f.id}')">Save</button>
+                <button class="btn-ghost" onclick="cancelLog('${f.id}')">Cancel</button>
+              </div>
+            </div>
+
+            <div class="history-label">Contact history</div>
+            ${historyHtml}
+
+            <div class="delete-friend-row">
+              <button class="btn-danger" onclick="deleteFriend('${f.id}')">Remove ${escHtml(f.name)}</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function formatDate(str) {
+    const [y, m, d] = str.split('-');
+    const date = new Date(+y, +m - 1, +d);
+    return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // ── Actions ────────────────────────────────────────────────────────────────
+
+  function toggleExpand(id) {
+    if (expandedId === id) {
+      expandedId = null;
+      logOpenId = null;
+    } else {
+      expandedId = id;
+    }
+    renderFriends();
+  }
+
+  function openLog(id) {
+    expandedId = id;
+    logOpenId = id;
+    renderFriends();
+    // focus the date field
+    setTimeout(() => {
+      const note = document.getElementById('lognote-' + id);
+      if (note) note.focus();
+    }, 0);
+  }
+
+  function cancelLog(id) {
+    logOpenId = null;
+    renderFriends();
+  }
+
+  function submitLog(id) {
+    const dateEl = document.getElementById('logdate-' + id);
+    const noteEl = document.getElementById('lognote-' + id);
+    const date   = dateEl ? dateEl.value : todayStr();
+    const note   = noteEl ? noteEl.value.trim() : '';
+
+    const friend = friends.find(f => f.id === id);
+    if (!friend) return;
+
+    friend.contacts.push({ id: uid(), date, note });
+    save(friends);
+    logOpenId = null;
+    toast(`Logged contact with ${friend.name}`);
+    renderFriends();
+  }
+
+  function deleteContact(friendId, contactId) {
+    const friend = friends.find(f => f.id === friendId);
+    if (!friend) return;
+    friend.contacts = friend.contacts.filter(c => c.id !== contactId);
+    save(friends);
+    toast('Contact entry removed');
+    renderFriends();
+  }
+
+  function saveReminderInterval(id) {
+    const input = document.getElementById('intervalinput-' + id);
+    const val = parseInt(input ? input.value : '', 10);
+    const friend = friends.find(f => f.id === id);
+    if (!friend) return;
+    if (!val || val < 1) { toast('Enter a number of days (e.g. 14)'); return; }
+    friend.reminderDays = val;
+    save(friends);
+    toast(`Reminder set: every ${val} days`);
+    renderFriends();
+  }
+
+  function clearReminderInterval(id) {
+    const friend = friends.find(f => f.id === id);
+    if (!friend) return;
+    friend.reminderDays = null;
+    save(friends);
+    toast('Reminder interval cleared');
+    renderFriends();
+  }
+
+  function deleteFriend(id) {
+    const friend = friends.find(f => f.id === id);
+    if (!friend) return;
+    if (!confirm(`Remove ${friend.name} from your tracker?`)) return;
+    friends = friends.filter(f => f.id !== id);
+    if (expandedId === id) expandedId = null;
+    if (logOpenId  === id) logOpenId  = null;
+    save(friends);
+    toast(`${friend.name} removed`);
+    renderFriends();
+  }
+
+  // ── Event listeners ────────────────────────────────────────────────────────
+
+  document.getElementById('addForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const input = document.getElementById('nameInput');
+    const name  = input.value.trim();
+    if (!name) return;
+
+    if (friends.some(f => f.name.toLowerCase() === name.toLowerCase())) {
+      toast(`${name} is already in your list`);
+      return;
+    }
+
+    friends.push({ id: uid(), name, contacts: [], reminderDays: null });
+    save(friends);
+    input.value = '';
+    toast(`${name} added`);
+    renderFriends();
+  });
+
+  document.getElementById('sortSelect').addEventListener('change', renderFriends);
+
+  // ── Init ───────────────────────────────────────────────────────────────────
+
+  renderFriends();
+</script>
+</body>
+</html>
