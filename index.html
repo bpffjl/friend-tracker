@@ -424,8 +424,8 @@
 
 <script type="module">
   import { initializeApp }                                          from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-  import { getAuth, signInWithPopup, GoogleAuthProvider,
-           onAuthStateChanged, signOut }                            from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+  import { getAuth, signInWithRedirect, getRedirectResult,
+           GoogleAuthProvider, onAuthStateChanged, signOut }        from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
   import { getFirestore, doc, getDoc, setDoc }                     from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
   // ── Firebase init ──────────────────────────────────────────────────────────
@@ -498,9 +498,14 @@
     }
   });
 
+  // Handle redirect result on page load (returning from Google sign-in)
+  getRedirectResult(auth).catch(e => {
+    console.error('Redirect sign-in error:', e);
+    toast('Sign-in failed — please try again.');
+  });
+
   window.signIn = async () => {
-    try { await signInWithPopup(auth, provider); }
-    catch (e) { if (e.code !== 'auth/popup-closed-by-user') toast('Sign-in failed. Please try again.'); }
+    await signInWithRedirect(auth, provider);
   };
 
   window.doSignOut = async () => {
